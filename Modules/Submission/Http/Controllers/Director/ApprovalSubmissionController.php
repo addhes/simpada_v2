@@ -94,7 +94,6 @@ class ApprovalSubmissionController extends Controller
 		->orderBy('submissions.created_at','DESC')
 		->get();
 
-
         $data = $data->where('finance_app', '<>', 2)
         ->where('director_app', '<>', 2);
             

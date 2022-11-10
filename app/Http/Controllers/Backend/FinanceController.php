@@ -52,9 +52,8 @@ class FinanceController extends Controller
         $balance = BalanceTransaction::select('last_balance')
         ->where('company_code', auth()->user()->company_code)
         ->orderBy('created_at','DESC')
-        ->first()->last_balance;
-
-        dd($balance);
+        ->first()->last_balance ?? 0;
+    
         
         $mytime = Carbon::now()->subDays(2)->toDateTimeString();
 

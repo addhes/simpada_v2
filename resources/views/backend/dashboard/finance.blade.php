@@ -220,8 +220,7 @@ table = $('#datatable-needconfirm').DataTable({
         {
             data: 'title',
             name: 'title',
-            searchable: false,
-            render: $.fn.dataTable.render.number('.', '.', 0, 'Rp.'),
+            searchable: false
         },
         {
             data: 'name',
@@ -237,7 +236,7 @@ table = $('#datatable-needconfirm').DataTable({
             data: 'estimated_price',
             name: 'estimated_price',
             searchable: false,
-            render: $.fn.dataTable.render.number('', '.', 2, '')
+            render: $.fn.dataTable.render.number('.', '.', 0, '')
         },
         {
             data: 'status',

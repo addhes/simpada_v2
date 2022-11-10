@@ -87,6 +87,7 @@ class UrgentSubmissionController extends Controller
 
         $data = DB::table('submissions')
         ->join('users', 'submissions.user_id', '=', 'users.id')
+        ->where('submissions.company_code', auth()->user()->company_code)
         ->select('submissions.*', 'users.name')
         ->where('submissions.status', '<>', '')
         ->orderBy('submissions.created_at','DESC')
@@ -148,6 +149,7 @@ class UrgentSubmissionController extends Controller
                                 ->leftjoin('banks as b', 's.bank_id', 'b.id')
                                 ->leftjoin('users as u', 's.user_id', 'u.id')
                                 ->selectRaw('s.*, IFNULL(cg.name, "-") as category, IFNULL(cn.name, "-") as channel, b.name as bank, u.name as name')
+                                ->where('s.company_code', auth()->user()->company_code)
                                 ->where('s.id',$id)->first();
 
                                 // dd($$module_name_singular);
@@ -230,6 +232,7 @@ class UrgentSubmissionController extends Controller
                                 ->leftjoin('banks as b', 's.bank_id', 'b.id')
                                 ->leftjoin('users as u', 's.user_id', 'u.id')
                                 ->selectRaw('s.*, IFNULL(cg.name, "-") as category, IFNULL(cn.name, "-") as channel, b.name as bank, u.name as name')
+                                ->where('s.company_code', auth()->user()->company_code)
                                 ->where('s.id',$id)->first();
 
         $submissiondetail = Submissiondetail::where('submission_code', $$module_name_singular->submission_code)->get();
@@ -304,6 +307,7 @@ class UrgentSubmissionController extends Controller
                                 ->leftjoin('banks as b', 's.bank_id', 'b.id')
                                 ->leftjoin('users as u', 's.user_id', 'u.id')
                                 ->selectRaw('s.*, IFNULL(cg.name, "-") as category, IFNULL(cn.name, "-") as channel, b.name as bank, u.name as name')
+                                ->where('s.company_code', auth()->user()->company_code)
                                 ->where('s.id',$id)->first();
 
         $submissiondetail = Submissiondetail::where('submission_code', $$module_name_singular->submission_code)->get();

@@ -39,7 +39,8 @@ class DirectorController extends Controller
         $this->module_model = "App\Models\User";   
     }
 
-    public function index(){
+    public function index()
+    {
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;
@@ -49,7 +50,9 @@ class DirectorController extends Controller
 
         $module_action = 'Dashboard';
 
-        $balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first()->last_balance;
+        $balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')
+        ->where('company_code', auth()->user()->company_code)
+        ->first()->last_balance ?? 0;
         $mytime = Carbon::now()->subDays(2)->toDateTimeString();
 
         return view('backend.dashboard.director', compact('balance'));

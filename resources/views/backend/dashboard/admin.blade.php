@@ -38,19 +38,21 @@
 
 <div class="card">
     <div class="row">
-        <div class="col-md-6 col-xl-3">
+        @foreach($arrCompanies as $item)
+        <div class="col-md-4 col-xl-2">
             <div class="">
                 <div class="card-body p-0">
                     <div class="media p-3">
                         <div class="media-body">
-                            <span class="text-muted text-uppercase font-size-12 font-weight-bold">Saldo Saat Ini</span>
+                            <span class="text-muted text-uppercase font-size-12 font-weight-bold">{{ $item['company'] }}</span>
                             <h4 class="mb-0 text-success warning">Rp.<span
-                                    id="premierTotalSum">@currency($balance)</span></h4>
+                                    id="premierTotalSum">@currency($item['balance'])</span></h4>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @endforeach
     </div>
 
     <div class="row">
@@ -66,6 +68,7 @@
                             <th>Kode Pengajuan</th>
                             <th>Pengajuan</th>
                             <th>User</th>
+                            <th>Company</th>
                             <th>Deskripsi</th>
                             <th>Estimasi Harga</th>
                             <th>Approval Keuangan</th>
@@ -93,6 +96,7 @@
                             <th>Kode Pengajuan</th>
                             <th>Pengajuan</th>
                             <th>User</th>
+                            <th>Company</th>
                             <th>Deskripsi</th>
                             <th>Estimasi Harga</th>
                             <th>Status</th>
@@ -150,7 +154,6 @@ table = $('#datatable').DataTable({
         {
             data: 'title',
             name: 'title',
-            searchable: false,
             render: $.fn.dataTable.render.number('.', '.', 0, ''),
         },
         {
@@ -159,9 +162,13 @@ table = $('#datatable').DataTable({
             searchable: false
         },
         {
+            data: 'company',
+            name: 'company',
+            searchable: false
+        },
+        {
             data: 'description',
             name: 'description',
-            searchable: false,
         },
         {
             data: 'estimated_price',
@@ -225,6 +232,11 @@ table = $('#datatable-needconfirm').DataTable({
         {
             data: 'name',
             name: 'name',
+            searchable: false
+        },
+        {
+            data: 'company',
+            name: 'company',
             searchable: false
         },
         {

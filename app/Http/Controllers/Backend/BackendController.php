@@ -5,6 +5,7 @@ use App\Authorizable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Parameter;
 use Auth;
 use Carbon\Carbon;
 use Flash;
@@ -56,10 +57,34 @@ class BackendController extends Controller
 
         $module_action = 'Dashboard';
 
-        $balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first()->last_balance;
+
+        if (Auth::user()->hasAnyRole(['label']) ) {// do your margic here
+            return redirect()->route('label.dashboard');
+        }
+        elseif (Auth::user()->hasAnyRole(['finance']) ) {// do your margic here
+            return redirect()->route('finance.dashboard');
+        }
+        elseif (Auth::user()->hasAnyRole(['director']) ) {// do your margic here
+            return redirect()->route('director.dashboard');
+        }
+
+        $balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first()->last_balance ?? 0;
         $mytime = Carbon::now()->subDays(2)->toDateTimeString();
 
-        return view('backend.dashboard.admin', compact('balance'));
+        $companies = Parameter::where('param_group', 'Company')->get();
+
+        $arrCompanies = array();
+
+        foreach($companies as $item){
+            $balance_com = BalanceTransaction::select('last_balance')
+            ->where('company_code', $item->param_key)
+            ->orderBy('created_at','DESC')
+            ->first()->last_balance ?? 0;
+
+            $arrCompanies[] = array("company" => $item->param_text, "balance" => $balance_com);
+        }
+    
+        return view('backend.dashboard.admin', compact('balance', 'arrCompanies'));
     }
 
     public function index_list_needconfirm()
@@ -76,16 +101,16 @@ class BackendController extends Controller
         // dd("test");
         $mytime = Carbon::now()->subDays(2)->toDateTimeString();
 
-        if(Auth::user()->hasRole('super admin')){
+        // if(Auth::user()->hasRole('super admin')){
             $data = $this->list_admin();
             $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
-        }elseif(Auth::user()->hasRole('administrator')){
-            $data = $this->list_admin();
-            $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
-        }elseif(Auth::user()->hasRole('employee')){
-            $data = $this->list_admin();
-            $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
-        }
+        // }elseif(Auth::user()->hasRole('administrator')){
+        //     $data = $this->list_admin();
+        //     $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
+        // }elseif(Auth::user()->hasRole('employee')){
+        //     $data = $this->list_admin();
+        //     $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
+        // }
 
         return Datatables::of($data)
 		->addIndexColumn()
@@ -118,14 +143,7 @@ class BackendController extends Controller
 
         $module_action = 'List';
 
-        // dd("test");
-        if(Auth::user()->hasRole('super admin')){
-            $data = $this->list_admin();
-        }elseif(Auth::user()->hasRole('administrator')){
-            $data = $this->list_admin();
-        }elseif(Auth::user()->hasRole('employee')){
-            $data = $this->list_admin();
-        }
+        $data = $this->list_admin();
 
         return Datatables::of($data)
 		->addIndexColumn()
@@ -164,7 +182,8 @@ class BackendController extends Controller
     public function list_admin()
     {
         $data = Submission::join('users', 'submissions.user_id', '=', 'users.id')
-        ->select('submissions.*', 'users.name')
+        ->leftJoin('parameters as p', 'submissions.company_code', 'p.param_key')
+        ->select('submissions.*', 'users.name', 'p.param_text as company')
         ->where(function($query) {
             $query->where('director_app', null)
             ->orWhere('finance_attachment', null);

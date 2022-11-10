@@ -49,6 +49,9 @@ class AuthenticatedSessionController extends Controller
         elseif (Auth::user()->hasAnyRole(['finance']) ) {// do your margic here
             return redirect()->route('finance.dashboard');
         }
+        elseif (Auth::user()->hasAnyRole(['director']) ) {// do your margic here
+            return redirect()->route('director.dashboard');
+        }
         else if ($redirectTo) {
             return redirect($redirectTo);
         } else {
