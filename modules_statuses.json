@@ -1,0 +1,22 @@
+{
+    "Article": true,
+    "Tag": true,
+    "Comment": true,
+    "Catalog": true,
+    "Withdraw": true,
+    "Bank": true,
+    "Upload": true,
+    "Report": true,
+    "DashboardUser": true,
+    "Label": true,
+    "Reportuser": true,
+    "Client": true,
+    "Bankaccount": true,
+    "BankAccount": true,
+    "Finance": true,
+    "Submission": true,
+    "Controller": true,
+    "Master": true,
+    "Income": true,
+    "Disbursement": true
+}

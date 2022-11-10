@@ -1,0 +1,21 @@
+.nav-item svg{
+    width: 16px;
+}
+
+.wajib{
+    color: red;
+}
+
+/* .tbl-show tr td:first-child {
+  width: 15em;
+  min-width: 15em;
+  max-width: 15em;
+  word-break: break-all;
+}
+
+.tbl-show tr td:nth-child(2) {
+    width: 8em;
+    min-width: 8em;
+    max-width: 8em;
+    word-break: break-all;
+  } */

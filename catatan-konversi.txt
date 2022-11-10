@@ -1,0 +1,19 @@
+- cleaning project
+- breadcrumb oke
+- setting pending
+- notification page done
+- menu user
+    - index done
+    - show done
+    - change password done
+    - profile edit done
+- menu roles
+    - index done
+    - create done
+    - edit done
+    - show done
+- auth
+    - forgot password done
+    - 
+- cleaning core ui
+- remove asset
