@@ -174,6 +174,7 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'admin', 'as' => 'backend.',
     Route::get('index_list_needconfirm', 'BackendController@index_list_needconfirm')->name('index_list_needconfirm');
 
 
+
     // *  Data Users Routes
     $module_name = 'data_user';
     $controller_name = 'DataUserController';

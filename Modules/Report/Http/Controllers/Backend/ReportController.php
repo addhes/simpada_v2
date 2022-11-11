@@ -234,7 +234,6 @@ class ReportController extends Controller
                                 ->leftjoin('banks as b', 's.bank_id', 'b.id')
                                 ->leftjoin('users as u', 's.user_id', 'u.id')
                                 ->selectRaw('s.*, IFNULL(cg.name, "-") as category, IFNULL(cn.name, "-") as channel, b.name as bank, u.name as name')
-                                ->where('s.company_code', auth()->user()->company_code)
                                 ->where('s.id',$id)->first();
 
         $submissiondetail = Submissiondetail::where('submission_code', $$module_name_singular->submission_code)->get();

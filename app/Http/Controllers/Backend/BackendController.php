@@ -101,16 +101,9 @@ class BackendController extends Controller
         // dd("test");
         $mytime = Carbon::now()->subDays(2)->toDateTimeString();
 
-        // if(Auth::user()->hasRole('super admin')){
             $data = $this->list_admin();
             $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
-        // }elseif(Auth::user()->hasRole('administrator')){
-        //     $data = $this->list_admin();
-        //     $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
-        // }elseif(Auth::user()->hasRole('employee')){
-        //     $data = $this->list_admin();
-        //     $data = $data->whereIn('status', [1, 3])->where('status_date','>=',$mytime);
-        // }
+
 
         return Datatables::of($data)
 		->addIndexColumn()
@@ -128,6 +121,11 @@ class BackendController extends Controller
 
             return "<span class='badge badge-soft-$badgeadmin py-1'>$appadmin </span>";
 		})
+        ->editColumn('submission_code', function($data){
+            $submission_code = "<a href='#'>".$data->submission_code."</a>";
+            
+            return $submission_code;
+        })
 		->rawColumns(['action', 'status'])
 		->make(true);
     }
@@ -175,7 +173,13 @@ class BackendController extends Controller
 
             return "<span class='badge badge-soft-$badgeadmin py-1'>$appadmin </span>";
 		})
-		->rawColumns(['action', 'status_finance', 'status_boss'])
+        ->editColumn('submission_code', function($data){
+            $submission_code = '<a href="admin/reports/'.$data->id.'" class="text-muted">'.$data->submission_code.'</a>';
+            
+            return $submission_code;
+        })
+
+		->rawColumns(['action', 'status_finance', 'status_boss', 'submission_code'])
 		->make(true);
     }
 
