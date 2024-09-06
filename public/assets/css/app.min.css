@@ -3968,7 +3968,7 @@ body.authentication-bg {
 
 .auth-page-sidebar {
     padding: 0;
-    background-image: url(/images/auth-bg.jpg);
+    background-image: url("../images/auth-bg.png");
     background-repeat: no-repeat;
     background-size: cover;
     height: 100%;

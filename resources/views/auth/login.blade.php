@@ -1,26 +1,30 @@
-@extends('layouts.non-auth',['isDark'=>true])
+@extends('layouts.non-auth',['isDark'=>false])
+
+@section('title')
+Login
+@endsection
 
 @section('content')
-<div class="account-pages  my-5" >
+<div class="account-pages  my-5">
     <div class="container ">
         <div class="row justify-content-center  ">
             <div class="col-xl-10 ">
-              @include('flash::message')
-              @if ($errors->any())
-              <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  <p>
-                      <i class="fas fa-exclamation-triangle"></i> @lang('Warning')
-                  </p>
-                  <ul>
-                      @foreach ($errors->all() as $error)
-                      <li>{{ $error }}</li>
-                      @endforeach
-                  </ul>
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              @endif
+                @include('flash::message')
+                @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <p>
+                        <i class="fas fa-exclamation-triangle"></i> @lang('Warning')
+                    </p>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @endif
                 <div class="card">
                     <div class="card-body p-0">
                         <div class="row">
@@ -28,13 +32,13 @@
                                 <div class="mx-auto mb-5">
                                     <a href="/">
                                         <image src="{{ URL::asset('assets/images/logo.png') }}" alt="" width='120px'>
-                                        <h3 class="d-inline align-middle ml-1 text-logo">{{ config('app.name') }}</h3>
+                                            <h3 class="d-inline align-middle ml-1 text-logo">{{ config('app.name') }}</h3>
                                     </a>
                                 </div>
 
                                 <h6 class="h5 mb-0 mt-4">Welcome back!</h6>
-                                <p class="text-muted mt-1 mb-4">Enter your email address and password to
-                                    access admin panel.</p>
+                                <p class="text-muted mt-1 mb-4">Sistem Pengajuan Angaran/Dana Wahana Media Entertainment
+                                    (SIMPADA WME).</p>
 
                                 @if(session('error'))<div class="alert alert-danger">{{ session('error') }}</div>
                                 <br>@endif
@@ -54,7 +58,8 @@
                                             </div>
                                             <input type="email"
                                                 class="form-control @if($errors->has('email')) is-invalid @endif" id="
-                                                email"  placeholder="{{ __('E-Mail Address') }}" name="email" value="{{ old('email')}}" />
+                                                email" placeholder="{{ __('E-Mail Address') }}" name="email"
+                                                value="{{ old('email')}}" />
 
                                             @if($errors->has('email'))
                                             <span class="invalid-feedback" role="alert">
@@ -72,8 +77,9 @@
                                                     <i class="icon-dual" data-feather="lock"></i>
                                                 </span>
                                             </div>
-                                            <input type="password" class="form-control @if($errors->has('password')) is-invalid @endif" id="password"
-                                                placeholder="{{ __('Password') }}"  name="password" />
+                                            <input type="password"
+                                                class="form-control @if($errors->has('password')) is-invalid @endif"
+                                                id="password" placeholder="{{ __('Password') }}" name="password" />
 
                                             @if($errors->has('password'))
                                             <span class="invalid-feedback" role="alert">
@@ -87,7 +93,8 @@
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="checkbox-signin"
                                                 {{ old('remember') ? 'checked' : '' }} />
-                                            <label class="custom-control-label" for="checkbox-signin">Remember me</label>
+                                            <label class="custom-control-label" for="checkbox-signin">Remember
+                                                me</label>
                                         </div>
                                     </div>
 
@@ -101,9 +108,9 @@
                                 <div class="auth-page-sidebar">
                                     <div class="overlay"></div>
                                     <div class="auth-user-testimonial">
-                                        <p class="font-size-24 font-weight-bold text-white mb-1">I simply love it!</p>
-                                        <p class="lead">"The true beauty of music is that it connects people!"</p>
-                                        <p>- Admin User - </p>
+                                        <p class="font-size-24 font-weight-bold text-white mb-1">Keep growing!</p>
+                                        <p class="lead">"Hal-hal besar tidak pernah datang dari zona nyaman!"</p>
+                                        <p>- Just Human -</p>
                                     </div>
                                 </div>
                             </div>

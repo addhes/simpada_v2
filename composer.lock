@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "acb4bbad897ce1eb3d980ce46d6724c8",
+    "content-hash": "0a653ef4b3d4e8ecae67ca696ab090a2",
     "packages": [
         {
             "name": "alexusmai/laravel-file-manager",
@@ -485,12 +485,12 @@
             "version": "1.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cloudinary-labs/cloudinary-laravel.git",
+                "url": "https://github.com/cloudinary-community/cloudinary-laravel.git",
                 "reference": "7543449243848eb936e4c492b82ec64512e67da0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cloudinary-labs/cloudinary-laravel/zipball/7543449243848eb936e4c492b82ec64512e67da0",
+                "url": "https://api.github.com/repos/cloudinary-community/cloudinary-laravel/zipball/7543449243848eb936e4c492b82ec64512e67da0",
                 "reference": "7543449243848eb936e4c492b82ec64512e67da0",
                 "shasum": ""
             },
@@ -518,12 +518,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "CloudinaryLabs\\CloudinaryLaravel\\": "src/"
-                },
                 "files": [
                     "src/Support/helpers.php"
-                ]
+                ],
+                "psr-4": {
+                    "CloudinaryLabs\\CloudinaryLaravel\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -547,8 +547,8 @@
                 "laravel"
             ],
             "support": {
-                "issues": "https://github.com/cloudinary-labs/cloudinary-laravel/issues",
-                "source": "https://github.com/cloudinary-labs/cloudinary-laravel/tree/1.0.4"
+                "issues": "https://github.com/cloudinary-community/cloudinary-laravel/issues",
+                "source": "https://github.com/cloudinary-community/cloudinary-laravel/tree/1.0.4"
             },
             "time": "2021-02-17T04:23:45+00:00"
         },
@@ -11821,7 +11821,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3.0"
+        "php": "^7.3|^8.1"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

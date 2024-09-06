@@ -2,23 +2,24 @@
 
 namespace Modules\Submission\Http\Controllers\Backend;
 
-use App\Authorizable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Modules\Submission\Entities\Submission;
-use Modules\Submission\Entities\SubmissionDetail;
-use Modules\Master\Entities\Category;
-use Modules\Master\Entities\Bank;
-use Modules\Master\Entities\Channel;
-use Yajra\DataTables\DataTables;
-use Illuminate\Support\Str;
 use Auth;
-use Flash;
 use File;
+use Flash;
 use Carbon;
 use Storage;
+use App\Authorizable;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+use Modules\Master\Entities\Bank;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Modules\Master\Entities\Channel;
+use Modules\Master\Entities\Category;
+use Modules\Submission\Entities\Submission;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Submission\Entities\SubmissionDetail;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class SubmissionController extends Controller
 {
@@ -41,7 +42,7 @@ class SubmissionController extends Controller
         // module model name, path
         $this->module_model = "Modules\Submission\Entities\Submission";
     }
-    
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -78,7 +79,7 @@ class SubmissionController extends Controller
 
         $data = Submission::where('user_id', Auth::user()->id)
         ->orderBy('submissions.created_at','DESC');
-            
+
         return Datatables::of($data)
         ->addIndexColumn()
         ->addColumn('action', function ($data) {
@@ -116,7 +117,7 @@ class SubmissionController extends Controller
         ->rawColumns(['action', 'finance_app', 'director_app'])
         ->make(true);
     }
-    
+
     /**santai dlu bnang, lagi panas
      * Show the form for creating a new resource.
      * @return Renderable
@@ -132,13 +133,22 @@ class SubmissionController extends Controller
 
         $module_action = 'Add';
 
+        $nores = $this->respending();
         $bank = Bank::orderBy('name')->get();
-		$channel = Channel::orderBy('name')->get();
-		$category = Category::orderBy('name')->get();
+        if(auth()->user()->company_code == 'bhk'){
+            $channel = Channel::orderBy('name')->where('is_bhk', 1)->get();
+            $category = Category::orderBy('name')->where('is_bhk', 1)->get();
+        }elseif (auth()->user()->company_code == 'wbb') {
+            $channel = Channel::orderBy('name')->where('is_wp', 1)->get();
+            $category = Category::orderBy('name')->where('is_wp', 1)->get();
+        }else{
+            $channel = Channel::orderBy('name')->get();
+            $category = Category::orderBy('name')->get();
+        }
 
         return view(
             "submission::backend.$module_name.create",
-            compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', 'bank', 'channel', 'category')
+            compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', 'bank', 'channel', 'category', 'nores')
         );
     }
 
@@ -155,7 +165,7 @@ class SubmissionController extends Controller
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
         $module_name_singular = Str::singular($module_name);
-        
+
         $module_action = 'Store';
 
 		$request->validate([
@@ -183,27 +193,43 @@ class SubmissionController extends Controller
 			'account_number.required' => 'Nomor Rekening Tujuan harus diisi',
 		]);
 
-		$submission = Submission::all();
+		$submission = Submission::where('user_id', auth()->user()->id)->get();
         $table_no = $submission->count(); // nantinya menggunakan database dan table sungguhan
         $tgl = substr(str_replace( '-', '', Carbon\carbon::now()), 0,8);
 
         $no= $tgl.$table_no;
         $auto=substr($no,8);
         $auto=intval($auto)+1;
-        $auto_number='PJN'.auth()->user()->id.substr($no,0,8).str_repeat(0,(4-strlen($auto))).$auto;
+        $auto_number='PJNS'.auth()->user()->id.substr($no,0,8).str_repeat(0,(4-strlen($auto))).$auto;
 
-        $resp = $this->respending() > 0 ? 1 : 0;
+        // if(auth()->user()->company_code == 'wbb'){
+        //     $resp = $this->respending() > 1 ? 1 : 0;
+        // }else{
+        //     $resp = $this->respending() > 0 ? 1 : 0;
+        // }
         $mytime = Carbon\Carbon::now();
 
         try{
         DB::beginTransaction();
         $user_attachment = "";
-		if($request->hasFile('user_attachment')){			
-			$extension = $request->file('user_attachment')->extension();
-			$resource = $request->file('user_attachment');
-			$user_attachment = date('dmyHis').'.'.$extension;
-			$path = Storage::putFileAs('public/user-attachment', $request->file('user_attachment'), $user_attachment);
-			$resource->move(\base_path() ."/public/storage/user-attachment", $user_attachment);
+		if($request->hasFile('user_attachment')){
+
+            $resource = $request->file('user_attachment');
+            $originalName = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
+            $public_id_cloudinary = date('dmyHis');
+
+            $uploadedFileUrl = Cloudinary::upload($resource->getRealPath(), [
+                'folder' => 'Submission',
+                'overwrite' => TRUE,
+                'public_id' => $public_id_cloudinary,
+                'resource_type' => 'auto'
+            ])->getSecurePath();
+
+			// $extension = $request->file('user_attachment')->extension();
+			// $resource = $request->file('user_attachment');
+			// $user_attachment = date('dmyHis').'.'.$extension;
+			// $path = Storage::putFileAs('public/user-attachment', $request->file('user_attachment'), $user_attachment);
+			// $resource->move(\base_path() ."/public/storage/user-attachment", $user_attachment);
 		}
 
         Submission::create([
@@ -212,14 +238,14 @@ class SubmissionController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'channel_id' => $request->channel_id,
-            'category_id' => $request->category_id,		       		
+            'category_id' => $request->category_id,
             'estimated_price' => preg_replace( '/[^0-9]/', '', $request->estimated_price),
             'category_id' =>$request->category_id,
             'bank_id' => $request->bank_id,
             'destination_account' => $request->destination_account,
             'account_number' => $request->account_number,
-            'user_attachment' => $user_attachment,
-            'status' => $resp,
+            'user_attachment' => $uploadedFileUrl,
+            'status' => 0,
             'status_date' => $mytime->toDateTimeString(),
             'company_code' => auth()->user()->company_code
         ]);
@@ -237,24 +263,33 @@ class SubmissionController extends Controller
                 ]);
             }
         }
-        
+
         // $phone_number = ['082272518485'];
 
-        // if ($this->respending() > 0) {
-        //     // $phone_number = ['082165518008','082272518485'];
-        //     $msg = "Mohon diproses, untuk Ijin Pengajuan ".$request->title." dari user ".ucwords(auth()->user()->name)." dengan kode pengajuan ".$auto_number."\nTerimakasih \n\nLink Approval: https://pengajuan.wahanaproduction.com";
+        // $phones = DB::table('notification_phones as np')
+        // ->join('users as u', 'np.user_id', 'u.id')
+        // ->where('np.company_code', auth()->user()->company_code)
+        // ->where('np.deleted_at', null)
+        // ->selectRaw('u.name, u.mobile, np.company_code, category_code, u.id');
+
+        // $phone_number = $phones->where('category_code', 'Finance')->get();
+        // $msg = "Mohon diproses, untuk pengajuan ".$request->title." dari user ".ucwords(auth()->user()->name)." dengan kode pengajuan ".$auto_number."\nTerimakasih \n\nLink Approval: https://simpada.wahanagroup.com";
+
+        // foreach ($phone_number as $item) {
+        //     $response = sendWA($item->mobile, $msg);
+        // }
+
+
+        // if ($resp > 0) {
+        //     $phone_number = $phones->where('category_code', 'Director')->get();
+        //     $msg = "Mohon diproses, untuk Ijin Pengajuan ".$request->title." dari user ".ucwords(auth()->user()->name)." dengan kode pengajuan ".$auto_number."\nTerimakasih \n\nLink Approval: https://simpada.wahanagroup.com";
 
         //     foreach ($phone_number as $item) {
-        //         $response = \GeneralHelper::sendWA($item, $msg);
+        //         $response = sendWA($item->mobile, $msg);
         //     }
         // }else{
-        //     // $phone_number = ['081281234788','082273102196'];
-        //     $msg = "Mohon diproses, untuk pengajuan ".$request->title." dari user ".ucwords(auth()->user()->name)." dengan kode pengajuan ".$auto_number."\nTerimakasih \n\nLink Approval: https://pengajuan.wahanaproduction.com";
+            // }
 
-        //     foreach ($phone_number as $item) {
-        //         $response = \GeneralHelper::sendWA($item, $msg);
-        //     }
-        // }
 
             DB::commit();
             Flash::success("<i class='fas fa-check'></i> New '".Str::singular($module_title)."' Added")->important();
@@ -278,7 +313,7 @@ class SubmissionController extends Controller
 		$nores = count($submissionNores);
 		return $nores;
 	}
-    
+
     /**
      * Show the specified resource.
      * @param int $id
@@ -286,15 +321,16 @@ class SubmissionController extends Controller
      */
     public function show($id)
     {
+        // dd('a');
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
-        $module_name_singular = Str::singular($module_name);    
+        $module_name_singular = Str::singular($module_name);
 
         $module_action = 'Show';
-        
+
         // $$module_name_singular = $module_model::findOrFail($id);
         $$module_name_singular = DB::table('submissions as s')
                                 ->leftjoin('categories as cg', 's.category_id', 'cg.id')
@@ -305,7 +341,7 @@ class SubmissionController extends Controller
                                 ->where('s.user_id', auth()->user()->id)
                                 ->first();
 
-                                // dd($$module_name_singular);
+                                // dd($$module_name_singular->user_attachment);
         $submissiondetail = Submissiondetail::where('submission_code', $$module_name_singular->submission_code)->get();
         $bank = Bank::orderBy('name')->get();
         $channel = Channel::orderBy('name')->get();
@@ -331,18 +367,26 @@ class SubmissionController extends Controller
         $module_path = $this->module_path;
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
-        $module_name_singular = Str::singular($module_name);    
+        $module_name_singular = Str::singular($module_name);
 
         $module_action = 'Edit';
-        
+
         $$module_name_singular = $module_model::where('id', $id)
-        ->where('user_id', auth()->user()->id) 
+        ->where('user_id', auth()->user()->id)
         ->first();
 
         $submissiondetail = Submissiondetail::where('submission_code', $$module_name_singular->submission_code)->get();
         $bank = Bank::orderBy('name')->get();
-        $channel = Channel::orderBy('name')->get();
-        $category = Category::orderBy('name')->get();
+        if(auth()->user()->company_code == 'bhk'){
+            $channel = Channel::orderBy('name')->where('is_bhk', 1)->get();
+            $category = Category::orderBy('name')->where('is_bhk', 1)->get();
+        }elseif (auth()->user()->company_code == 'wbb') {
+            $channel = Channel::orderBy('name')->where('is_wp', 1)->get();
+            $category = Category::orderBy('name')->where('is_wp', 1)->get();
+        }else{
+            $channel = Channel::orderBy('name')->get();
+            $category = Category::orderBy('name')->get();
+        }
 
         return view(
             "$module_path::backend.$module_name.edit",
@@ -398,24 +442,50 @@ class SubmissionController extends Controller
 
             $submission = Submission::find($id);
 		   	$user_attachment = "";
-		   	if($request->hasFile('user_attachment')){	
-		   		Storage::delete('public/user-attachment/'.$submission->user_attachment);
-		   		$resource = $request->file('user_attachment');
-		   		$extension = $request->file('user_attachment')->extension();
-		   		$user_attachment = date('dmyHis').'.'.$extension;
-		   		$path = Storage::putFileAs('public/user-attachment', $request->file('user_attachment'), $user_attachment);
-		   		$resource->move(\base_path() ."/public/storage/user-attachment", $user_attachment);
+            $public_id_cloudinary = "";
+		   	if($request->hasFile('user_attachment')){
+
+                $submission = Submission::find($id);
+                // dd($submission);
+                $mecah_submission = explode("/", $submission->user_attachment);
+                // dd($mecah_submission);
+
+                if ($mecah_submission[0] == "https:") {
+                    $as = Cloudinary::destroy('Submission/'.$submission->public_id_cloudinary);
+                    // dd($as);
+                } else {
+                    Storage::delete('public/user-attachment/'.$submission->user_attachment);
+                    // $resource = $request->file('user_attachment');
+                    // $extension = $request->file('user_attachment')->extension();
+                    // $user_attachment = date('dmyHis').'.'.$extension;
+                    // $path = Storage::putFileAs('public/user-attachment', $request->file('user_attachment'), $user_attachment);
+                    // $resource->move(\base_path() ."/public/storage/user-attachment", $user_attachment);
+                }
+
+                    $resource = $request->file('user_attachment');
+                    $originalName = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
+                    $public_id_cloudinary = date('dmyHis');
+                    // dd($public_id_cloudinary);
+
+                    $user_attachment = Cloudinary::upload($resource->getRealPath(), [
+                        'folder' => 'Submission',
+                        'overwrite' => TRUE,
+                        'public_id' => $public_id_cloudinary,
+                        'resource_type' => 'auto'
+                    ])->getSecurePath();
 		   	}
 
 		   	$Submission = Submission::find($id);
 		   	$Submission->title = $request->title;
 		   	$Submission->description = $request->description;
 		   	$Submission->channel_id = $request->channel_id;
+		   	$Submission->category_id = $request->category_id;
 		   	$Submission->estimated_price = preg_replace( '/[^0-9]/', '', $request->estimated_price);
 		   	$Submission->bank_id = $request->bank_id;
 		   	$Submission->destination_account = $request->destination_account;
 		   	$Submission->account_number = $request->account_number;
 		   	$Submission->user_attachment =  ($user_attachment <> "") ? $user_attachment : $Submission->user_attachment;
+            $Submission->public_id_cloudinary = ($public_id_cloudinary != '') ? $public_id_cloudinary : null;
 		   	$Submission->save();
 
 		   	$submissiondetail=SubmissionDetail::where('submission_code', $submission->submission_code)->delete();
@@ -440,7 +510,7 @@ class SubmissionController extends Controller
         } catch(\Exception $e){
             DB::rollBack();
             return $e->getMessage();
-        } 
+        }
     }
 
     /**
@@ -450,6 +520,25 @@ class SubmissionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_path = $this->module_path;
+        $module_icon = $this->module_icon;
+        $module_model = $this->module_model;
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'Update';
+
+        $submission = Submission::find($id);
+        $submissiondetail = SubmissionDetail::where('submission_code', $submission->submission_code)->delete();
+
+        Storage::delete('public/user-attachment/'.$submission->user_attachment);
+
+        $submission = Submission::find($id);
+        $submission->delete();
+
+        Flash::success('<i class="fas fa-check"></i> '.label_case($module_name_singular).' Deleted Successfully!')->important();
+
+        return redirect("admin/$module_name");
     }
 }

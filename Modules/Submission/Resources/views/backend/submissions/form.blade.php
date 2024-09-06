@@ -177,9 +177,10 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="col-lg-2 col-form-label" for="user_attachment">Attachment</label>
+            <label class="col-lg-2 col-form-label" for="user_attachment">Attachment <span
+                    class="wajib">*</span></label>
             <div class="col-lg-10">
-                <input type="file" class="form-control" id="user_attachment" name="user_attachment">
+                <input type="file" class="form-control" id="user_attachment" name="user_attachment" required>
                 @if ($errors->has('user_attachment'))
                 <span class="text-danger">{{ $errors->first('user_attachment') }}</span>
                 @endif
@@ -190,10 +191,21 @@
             <label class="col-lg-2 col-form-label" for="user_attachment"></label>
             <div class="col-lg-10">
                 <div class="btn-group">
-                    <a href="{{ asset('storage/user-attachment/'.($submission->user_attachment ?? '')) }}" target="_blank"
+                    @if (Storage::exists('public/user-attachment/'.$$module_name_singular->user_attachment))
+                                    <a href="{{ asset ('storage/user-attachment/'.$submission->user_attachment) }}"
+                                        target="_blank" class=" btn btn-primary {{ $submission->user_attachment == '' ? 'a-disabled' : '' }}"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class='uil uil-file-alt mr-1'></i>Lihat Attachment</a>
+                                    @else
+                                    <a href="{{ $submission->user_attachment }}"
+                                        target="_blank" class=" btn btn-primary {{ $submission->user_attachment == '' ? 'a-disabled' : '' }}"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class='uil uil-file-alt mr-1'></i>Lihat Attachment</a>
+                                    @endif
+                    {{-- <a href="{{ asset('storage/user-attachment/'.($submission->user_attachment ?? '')) }}" target="_blank"
                         class="btn btn-primary {{ ($submission->user_attachment ?? '') == '' ? 'disabled' : '' }}"
                         aria-haspopup="true" aria-expanded="false">
-                        <i class='uil uil-file-alt mr-1'></i>Lihat Attachment</a>
+                        <i class='uil uil-file-alt mr-1'></i>Lihat Attachment</a> --}}
                 </div>
                 @if(($submission->user_attachment ?? '') == '')
                 <p class="font-italic text-danger">Attachment belum ada.</p>

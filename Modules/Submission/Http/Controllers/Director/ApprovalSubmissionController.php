@@ -90,7 +90,7 @@ class ApprovalSubmissionController extends Controller
 		->select('submissions.*', 'users.name')
 		->where('submissions.company_code', auth()->user()->company_code)
 		->where('submissions.finance_app', 1)
-		->where('submissions.director_app', 0)
+		->where('submissions.director_app', null)
 		->orderBy('submissions.created_at','DESC')
 		->get();
 
@@ -167,7 +167,7 @@ class ApprovalSubmissionController extends Controller
         $channel = Channel::orderBy('name')->get();
         $category = Category::orderBy('name')->get();
         $total = $submissiondetail->sum('nominal');
-		$balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first();
+		$balance = BalanceTransaction::select('last_balance')->where('company_code', $$module_name_singular->company_code)->orderBy('created_at','DESC')->first();
 		$last_balance = $balance->last_balance == null ? 0 : $balance->last_balance;
 
         $status = statusChecking($$module_name_singular->submission_code);
@@ -250,7 +250,7 @@ class ApprovalSubmissionController extends Controller
         $channel = Channel::orderBy('name')->get();
         $category = Category::orderBy('name')->get();
         $total = $submissiondetail->sum('nominal');
-		$balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first();
+		$balance = BalanceTransaction::select('last_balance')->where('company_code', $$module_name_singular->company_code)->orderBy('created_at','DESC')->first();
 		$last_balance = $balance->last_balance == null ? 0 : $balance->last_balance;
 
         $status = statusChecking($$module_name_singular->submission_code);
@@ -350,7 +350,7 @@ class ApprovalSubmissionController extends Controller
         $channel = Channel::orderBy('name')->get();
         $category = Category::orderBy('name')->get();
         $total = $submissiondetail->sum('nominal');
-		$balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first();
+		$balance = BalanceTransaction::select('last_balance')->where('company_code', $$module_name_singular->company_code)->orderBy('created_at','DESC')->first();
 		$last_balance = $balance->last_balance == null ? 0 : $balance->last_balance;
 
         $status = statusChecking($$module_name_singular->submission_code);

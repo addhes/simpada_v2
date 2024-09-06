@@ -43,7 +43,7 @@
                     <strong>DETAIL PENGAJUAN</strong>
                 </div>
 
-                <table class="table table-responsive  tbl-show">
+                <table class="table table-responsive table-borderless  tbl-show">
                     <tr>
                         <td><strong>Kode Pengajuan</strong></td>
                         <td>:</td>
@@ -60,11 +60,16 @@
                         <td>{{ $$module_name_singular->description }}</td>
                     </tr>
                     <tr>
+                        <td><strong>Total Estimasi</strong></td>
+                        <td>:</td>
+                        <td>Rp. @currency($submission->estimated_price)</td>
+                    </tr>
+                    <tr>
                         <td><strong>Attachment</strong></td>
                         <td>:</td>
                         <td>
                             <div class="btn-group">
-                                @if(($accountability->accountability_attachment ?? '') == '')
+                                {{-- @if(($accountability->accountability_attachment ?? '') == '')
                                 <p class="font-italic text-danger">Attachment tidak ada.</p>
                                 @else
                                 <a href="{{ asset ('storage/accountability-attachment/'.$accountability->accountability_attachment) }}"
@@ -72,15 +77,34 @@
                                     class="{{ $accountability->accountability_attachment == '' ? 'a-disabled' : '' }}"
                                     aria-haspopup="true" aria-expanded="false">
                                     <i class='uil uil-file-alt mr-1'></i>Unduh</a>
+                                @endif --}}
+
+                                @if(($accountability->accountability_attachment ?? '') == '')
+                                    <p class="font-italic text-danger">Attachment tidak ada.</p>
+                                @else
+
+                                    @if (Storage::exists('public/accountability-attachment/'.$$module_name_singular->accountability_attachment))
+                                    <a href="{{ asset ('storage/accountability-attachment/'.$accountability->accountability_attachment) }}"
+                                        target="_blank"
+                                        class="{{ $accountability->accountability_attachment == '' ? 'a-disabled' : '' }}"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class='uil uil-file-alt mr-1'></i>Unduh</a>
+                                    @else
+                                    <a href="{{ $accountability->accountability_attachment }}"
+                                        target="_blank" class="{{ $accountability->accountability_attachment == '' ? 'a-disabled' : '' }}"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class='uil uil-file-alt mr-1'></i>Unduh</a>
+                                    @endif
                                 @endif
                             </div>
                         </td>
                     </tr>
                 </table>
 
+
                 <hr>
                 <div class="container-fluid" style="padding: auto;">
-                    <strong>DETAIL BIAYA </strong>
+                    <strong>DETAIL BIAYA PERTANGGUNG JAWABAN</strong>
                 </div>
 
                 <table class="table table-responsive" id="tbl_posts">
@@ -120,7 +144,22 @@
                     </tfoot>
                 </table>
                 <hr>
+                <div class="form-group row col-lg-2">
+                    @if($submission->estimated_price > $total)
+                    <label class="font-weight-bold text-warning"> Anggaran Lebih</label>
+                    @elseif($submission->estimated_price < $total)
+                        <label class="font-weight-bold text-danger"> Anggaran Kurang</label>
+                    @else
+                        <label class="font-weight-bold text-success"> Anggaran Sesuai</label>
+                    @endif
+                </div>
 
+                <div class="form-group row">
+                    <label class="col-lg-2 col-form-label" for="submission_code">Selisih:
+                        {{ abs($total - $submission->estimated_price)}} </label>
+                </div>
+
+                <hr>
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">

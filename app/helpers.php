@@ -71,11 +71,11 @@ if(!function_exists('roundDown')){
     }
 }
 
-if( !function_exists('kirimWA') )
+if( !function_exists('sendWA') )
 {
-    function kirimWA($nomor,$pesan){
+    function sendWA($nomor,$pesan){
         $curl = curl_init();
-        $token = "9574oZUTgRHarXtGUhyZukcedXYdDJh7q7vkJMQxeYfZnE568rT2eHD2F6hZyaW3";
+        $token = "iaetjNKksGJNIztMRUrjDH1HuxjRQwxtruPoLctNHNIT6TBzTFUnssyXrcFqZe57";
         $data = [
             'phone' => $nomor,
             'message' => $pesan,

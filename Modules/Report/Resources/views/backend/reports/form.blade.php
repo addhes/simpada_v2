@@ -55,6 +55,16 @@
             </div>
         </td>
     </tr>
+        <tr>
+        <td>Finance Director</td>
+        <td>:</td>
+        <td>{{ $$module_name_singular->finance_desc }}</td>
+    </tr>
+    <tr>
+        <td>Deskripsi Director</td>
+        <td>:</td>
+        <td>{{ $$module_name_singular->director_desc }}</td>
+    </tr>
 </table>
 
 <hr>

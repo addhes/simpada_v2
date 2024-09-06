@@ -67,7 +67,7 @@ class ChannelController extends Controller
         $module_action = 'List';
 
 		$data = Channel::all();
-                
+
         return Datatables::of($data)
         ->addIndexColumn()
         ->addColumn('action', function ($data) {
@@ -94,9 +94,9 @@ class ChannelController extends Controller
         $module_name_singular = Str::singular($module_name);
 
         $module_action = 'Edit';
-        
+
         $data = $module_model::findOrFail($id);
-        
+
         return response()->json($data);
     }
 
@@ -128,6 +128,7 @@ class ChannelController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;
@@ -157,12 +158,12 @@ class ChannelController extends Controller
         $module_path = $this->module_path;
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
-        $module_name_singular = Str::singular($module_name);    
+        $module_name_singular = Str::singular($module_name);
 
         $module_action = 'Show';
-        
+
         $$module_name_singular = $module_model::findOrFail($id);
-        
+
         return view(
             "master::backend.$module_name.show",
             compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "$module_name_singular")
@@ -181,12 +182,12 @@ class ChannelController extends Controller
         $module_path = $this->module_path;
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
-        $module_name_singular = Str::singular($module_name);    
+        $module_name_singular = Str::singular($module_name);
 
         $module_action = 'Edit';
-        
+
         $$module_name_singular = $module_model::findOrFail($id);
-        
+
         return view(
             "master::backend.$module_name.edit",
             compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "$module_name_singular")
@@ -201,6 +202,8 @@ class ChannelController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
+        // dd($request->has('is_wp') ? 1 : 0);
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;
@@ -210,11 +213,24 @@ class ChannelController extends Controller
 
         $module_action = 'Update';
 
+        if (!$request->is_wp) {
+            $request->merge(['is_wp' => "0"]);
+
+        }
+
+        if (!$request->is_bhk) {
+            $request->merge(['is_bhk' => "0"]);
+        }
+
+        // dd($request->all());
+
         $$module_name_singular =$module_model::findOrFail($id);
 		$channel->name = $request->name;
 		$channel->channel_id = $request->channel_id;
 		$channel->pic = $request->pic;
 		$channel->email = $request->email;
+        $channel->is_wp = $request->is_wp;
+        $channel->is_bhk = $request->is_bhk;
 
         $$module_name_singular->save();
 

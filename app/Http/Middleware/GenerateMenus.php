@@ -20,7 +20,7 @@ class GenerateMenus
         // Director Sidebar
         \Menu::make('director_sidebar', function ($menu) {
             // Dashboard
-            $menu->add('<i data-feather="home"></i> Dashboard', [
+            $menu->add('<i data-feather="home"></i><span>Dashboard</span> ', [
                 'route' => 'director.dashboard',
                 'class' => 'c-sidebar-nav-item',
             ])
@@ -36,7 +36,7 @@ class GenerateMenus
         // Employee Sidebar
         \Menu::make('employee_sidebar', function ($menu) {
             // Dashboard
-            $menu->add('<i data-feather="home"></i> Dashboard', [
+            $menu->add('<i data-feather="home"></i> <span>Dashboard</span>', [
                 'route' => 'employee.dashboard',
                 'class' => 'c-sidebar-nav-item',
             ])
@@ -52,7 +52,7 @@ class GenerateMenus
         // Finance Sidebar
         \Menu::make('finance_sidebar', function ($menu) {
             // Dashboard
-            $menu->add('<i data-feather="home"></i> Dashboard', [
+            $menu->add('<i data-feather="home"></i> <span>Dashboard</span>', [
                 'route' => 'finance.dashboard',
                 'class' => 'c-sidebar-nav-item',
             ])
@@ -68,7 +68,7 @@ class GenerateMenus
         // Admin Sidebar
         \Menu::make('admin_sidebar', function ($menu) {
             // Dashboard
-            $menu->add('<i data-feather="home"></i> Dashboard', [
+            $menu->add('<i data-feather="home"></i> <span>Dashboard</span>', [
                 'route' => 'backend.dashboard',
             ])
             ->data([
@@ -86,7 +86,7 @@ class GenerateMenus
             ]);
 
             // Parameters
-            $menu->add('<i data-feather="parameters"></i> Parameters', [
+            $menu->add('<i data-feather="parameters"></i> <span>Parameters</span>', [
                 'route' => 'backend.parameters',
             ])
             ->data([
@@ -95,8 +95,18 @@ class GenerateMenus
                 'permission'    => ['view_parameters'],
             ]);
 
+            // Notification Phone Number
+            $menu->add('<i data-feather="parameters"></i> <span>Notification Phone</span>', [
+                'route' => 'backend.notification_phones',
+            ])
+            ->data([
+                'order'         => 102,
+                'activematches' => 'admin/notification_phones*',
+                'permission'    => ['view_notification_phones'],
+            ]);
+
             // Settings
-            $menu->add('<i data-feather="settings"></i> Settings', [
+            $menu->add('<i data-feather="settings"></i> <span>Settings</span>', [
                 'route' => 'backend.settings',
             ])
             ->data([
@@ -106,7 +116,7 @@ class GenerateMenus
             ]);
 
             // Backup
-            $menu->add('<i data-feather="archive"></i> Backups', [
+            $menu->add('<i data-feather="archive"></i> <span>Backups</span>', [
                 'route' => 'backend.backups.index',
                 'class' => 'nav-item',
             ])
@@ -117,7 +127,7 @@ class GenerateMenus
             ]);
 
             // Access Control Dropdown
-            $accessControl = $menu->add('<i data-feather="shield"></i> Access Control<span class="menu-arrow"></span>', [
+            $accessControl = $menu->add('<i data-feather="shield"></i> <span>Access Control</span><span class="menu-arrow"></span>', [
                 'class' => '',
             ])
             ->data([
@@ -163,7 +173,7 @@ class GenerateMenus
 
             // Log Viewer
             // Log Viewer Dropdown
-            $accessControl = $menu->add('<i data-feather="list"></i> Log Viewer <span class="menu-arrow"></span>', [
+            $accessControl = $menu->add('<i data-feather="list"></i> <span>Log Viewer</span> <span class="menu-arrow"></span>', [
                 'class' => 'c-sidebar-nav-dropdown',
             ])
             ->data([

@@ -13,10 +13,10 @@
     "type": "project",
     "version": "v8.4.1",
     "require": {
-        "php": "^7.3.0",
+        "php": "^7.3|^8.1",
         "alexusmai/laravel-file-manager": "^2.5",
         "arcanedev/log-viewer": "^8.0",
-        "cloudinary-labs/cloudinary-laravel": "^1.0",
+        "cloudinary-labs/cloudinary-laravel": "1.0.4",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

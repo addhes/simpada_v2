@@ -19,7 +19,7 @@ class GenerateMenus
         \Menu::make('admin_sidebar', function ($menu) {
 
             // Access Control Dropdown Master
-            $accessControl = $menu->add('<i data-feather="columns"></i> Master<span class="menu-arrow">', [
+            $accessControl = $menu->add('<i data-feather="columns"></i><span>Master</span> <span class="menu-arrow">', [
                 'class' => 'c-sidebar-nav-dropdown',
             ])
             ->data([
@@ -37,7 +37,7 @@ class GenerateMenus
             ]);
             
             // Submenu: Category
-            $accessControl->add('<i data-feather="layers"></i> Category', [
+            $accessControl->add('<i data-feather="layers"></i> <span>Category</span>', [
                 'route' => 'backend.categories.index',
                 'class' => 'nav-item',
             ])
@@ -51,7 +51,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Bank
-            $accessControl->add('<i data-feather="credit-card"></i> Bank', [
+            $accessControl->add('<i data-feather="credit-card"></i> <span>Bank</span>', [
                 'route' => 'backend.banks.index',
                 'class' => 'nav-item',
             ])
@@ -65,7 +65,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Channel
-            $accessControl->add('<i data-feather="youtube"></i> Channel', [
+            $accessControl->add('<i data-feather="youtube"></i> <span>Channel</span>', [
                 'route' => 'backend.channels.index',
                 'class' => 'nav-item',
             ])
@@ -82,7 +82,7 @@ class GenerateMenus
         \Menu::make('finance_sidebar', function ($menu) {
 
             // Access Control Dropdown Master
-            $accessControl = $menu->add('<i data-feather="columns"></i> Master<span class="menu-arrow">', [
+            $accessControl = $menu->add('<i data-feather="columns"></i><span></span> Master<span class="menu-arrow">', [
                 'class' => 'c-sidebar-nav-dropdown',
             ])
             ->data([
@@ -100,7 +100,7 @@ class GenerateMenus
             ]);
             
             // Submenu: Category
-            $accessControl->add('<i data-feather="layers"></i> Category', [
+            $accessControl->add('<i data-feather="layers"></i><span>Category</span> ', [
                 'route' => 'backend.categories.index',
                 'class' => 'nav-item',
             ])
@@ -114,7 +114,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Bank
-            $accessControl->add('<i data-feather="credit-card"></i> Bank', [
+            $accessControl->add('<i data-feather="credit-card"></i><span>Bank</span> ', [
                 'route' => 'backend.banks.index',
                 'class' => 'nav-item',
             ])
@@ -128,7 +128,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Channel
-            $accessControl->add('<i data-feather="youtube"></i> Channel', [
+            $accessControl->add('<i data-feather="youtube"></i><span>Channel</span> ', [
                 'route' => 'backend.channels.index',
                 'class' => 'nav-item',
             ])

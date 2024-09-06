@@ -25,11 +25,11 @@
 
             <div class="col-6 col-sm-4">
                 <div class="float-right">
-                    <div class="container" id="urgentGroup">
+                    {{-- <div class="container" id="urgentGroup">
                         <input type="checkbox" id="urgent" name="urgent" value="urgent" class="ml-3"
                             onclick="urgentFunction()">
                         <label for="urgent"> <b class="text-danger">PERMINTAAN URGENT ??</b> </label>
-                    </div>
+                    </div> --}}
                     <div class="container">
                         <x-buttons.create route='{{ route("backend.$module_name.create") }}'
                             title="{{__('Create')}} {{ ucwords(Str::singular($module_name)) }}" id="btnPengajuan" class="float-right" />
@@ -110,32 +110,55 @@ function myFunction() {
         event.preventDefault();
 }
 
-$(document).ready(function() {
-    var urgentGroup = document.getElementById("urgentGroup");
-    var checkBox = document.getElementById("urgent");
-    var urgentMessage = document.getElementById("urgentMessage");
-    var btnPengajuan = document.getElementById("btnPengajuan");
+// $(document).ready(function() {
+//     var urgentGroup = document.getElementById("urgentGroup");
+//     var checkBox = document.getElementById("urgent");
+//     var urgentMessage = document.getElementById("urgentMessage");
+//     var btnPengajuan = document.getElementById("btnPengajuan");
 
-    var nores = "{{ $nores }}";
-    if (nores > 0) {
-        btnPengajuan.style.display = "none";
-        urgentGroup.style.display = "block";
-    } else {
-        btnPengajuan.style.display = "block";
-        urgentGroup.style.display = "none";
-    }
+//     var nores = "{{ $nores }}";
+//     var cab = "{{ auth()->user()->company_code }}";
 
-    $("#urgent").click(function() {
-        if (checkBox.checked == true) {
-            urgentMessage.style.display = "block";
-            btnPengajuan.style.display = "inline";
-        } else {
-            urgentMessage.style.display = "none";
-            btnPengajuan.style.display = "none";
-        }
-    });
-    
-});
+//     // alert(cab);
+
+//     if (cab == 'wbb') {
+//         if (nores > 1) {
+//             btnPengajuan.style.display = "none";
+//             urgentGroup.style.display = "block";
+//         } else {
+//             btnPengajuan.style.display = "block";
+//             urgentGroup.style.display = "none";
+//         }
+//     } else {
+//         if (nores > 0) {
+//             btnPengajuan.style.display = "none";
+//             urgentGroup.style.display = "block";
+//         } else {
+//             btnPengajuan.style.display = "block";
+//             urgentGroup.style.display = "none";
+//         }
+//     }
+
+
+//     // if (nores > 0) {
+//     //     btnPengajuan.style.display = "none";
+//     //     urgentGroup.style.display = "block";
+//     // } else {
+//     //     btnPengajuan.style.display = "block";
+//     //     urgentGroup.style.display = "none";
+//     // }
+
+//     $("#urgent").click(function() {
+//         if (checkBox.checked == true) {
+//             urgentMessage.style.display = "block";
+//             btnPengajuan.style.display = "inline";
+//         } else {
+//             urgentMessage.style.display = "none";
+//             btnPengajuan.style.display = "none";
+//         }
+//     });
+
+// });
 </script>
 
 <!-- DataTables Core and Extensions -->

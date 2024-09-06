@@ -20,6 +20,7 @@ use Auth;
 use Flash;
 use File;
 use Carbon\Carbon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Storage;
 
 class AccountabilityController extends Controller
@@ -64,7 +65,7 @@ class AccountabilityController extends Controller
             compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular')
         );
     }
-    
+
     public function index_list()
     {
         $module_title = $this->module_title;
@@ -93,14 +94,14 @@ class AccountabilityController extends Controller
 		})
 		->addColumn('total', function($data){
 			$total = AccountabilityDetail::where('accountability_code', $data->accountability_code)->sum('nominal');
-            
+
 			$totalBar = $total;
 			return $totalBar;
 		})
 		->rawColumns(['action'])
 		->make(true);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      * @return Renderable
@@ -148,10 +149,10 @@ class AccountabilityController extends Controller
 
         $module_action = 'Edit';
 		$data = Submission::where('submission_code', $id)->first();
-        
+
         return response()->json($data);
     }
-    
+
     /**
      * Store a newly created resource in storage.
      * @param Request $request
@@ -165,7 +166,7 @@ class AccountabilityController extends Controller
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
         $module_name_singular = Str::singular($module_name);
-        
+
         $module_action = 'Store';
 
         $request->validate([
@@ -188,11 +189,23 @@ class AccountabilityController extends Controller
             $accountability = Accountability::all();
 
             $accountability_attachment = "";
-            if($request->hasFile('accountability_attachment')){			
-                $this->validate($request, ['accountability_attachment' => 'required|file|max:5000']);
-                $extension = $request->file('accountability_attachment')->extension();
-                $accountability_attachment = date('dmyHis').'.'.$extension;
-                $path = Storage::putFileAs('public/accountability-attachment', $request->file('accountability_attachment'), $accountability_attachment);
+            if($request->hasFile('accountability_attachment')){
+                $resource = $request->file('accountability_attachment');
+                $originalName = pathinfo($resource->getClientOriginalName(), PATHINFO_FILENAME);
+                $public_id_cloudinary = date('dmyHis');
+                // dd($public_id_cloudinary);
+
+                $accountability_attachment = Cloudinary::upload($resource->getRealPath(), [
+                    'folder' => 'Accountability',
+                    'overwrite' => TRUE,
+                    'public_id' => $public_id_cloudinary,
+                    'resource_type' => 'auto'
+                ])->getSecurePath();
+
+                // $this->validate($request, ['accountability_attachment' => 'required|file|max:5000']);
+                // $extension = $request->file('accountability_attachment')->extension();
+                // $accountability_attachment = date('dmyHis').'.'.$extension;
+                // $path = Storage::putFileAs('public/accountability-attachment', $request->file('accountability_attachment'), $accountability_attachment);
             }
 
             $table_no = $accountability->count();
@@ -216,7 +229,7 @@ class AccountabilityController extends Controller
             $datedetail = $request->input('datedetail', []);
             $descriptiondetail = $request->input('descriptiondetail', []);
             $nominal = $request->input('nominal', []);
-    
+
             for ($i=0; $i < count($nominal); $i++) {
                 if ($nominal[$i] != '') {
                     AccountabilityDetail::create([
@@ -228,7 +241,7 @@ class AccountabilityController extends Controller
                     ]);
                 }
             }
-                    
+
             DB::commit();
             Flash::success("<i class='fas fa-check'></i> New '".Str::singular($module_title)."' Added")->important();
             return redirect("admin/$module_name");
@@ -251,7 +264,7 @@ class AccountabilityController extends Controller
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
         $module_name_singular = Str::singular($module_name);
-        
+
         $module_action = 'Show';
 
 		$submissions = Submission::where('submissions.user_id', Auth::user()->id)->get();
@@ -259,7 +272,7 @@ class AccountabilityController extends Controller
 		$accountabilitydetail = AccountabilityDetail::where('accountability_code', $$module_name_singular->accountability_code)->get();
 		$total = $accountabilitydetail->sum("nominal");
 		$submission = Submission::where('submission_code', $$module_name_singular->submission_code)->first();
-        
+
         return view(
             "$module_path::backend.$module_name.show",
             compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "$module_name_singular", 'accountabilitydetail', 'total', 'submission', 'submissions')
@@ -279,7 +292,7 @@ class AccountabilityController extends Controller
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
         $module_name_singular = Str::singular($module_name);
-        
+
         $module_action = 'Edit';
 
 		$submissions = Submission::where('submissions.user_id', Auth::user()->id)->get();
@@ -287,7 +300,7 @@ class AccountabilityController extends Controller
 		$accountabilitydetail = AccountabilityDetail::where('accountability_code', $$module_name_singular->accountability_code)->get();
 		$total = $accountabilitydetail->sum("nominal");
 		$submission = Submission::where('submission_code', $$module_name_singular->submission_code)->first();
-        
+
         return view(
             "$module_path::backend.$module_name.edit",
             compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "$module_name_singular", 'accountabilitydetail', 'total', 'submission', 'submissions')
@@ -308,9 +321,9 @@ class AccountabilityController extends Controller
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
         $module_name_singular = Str::singular($module_name);
-        
+
         $module_action = 'Update';
-        
+
         $request->validate([
 			'description' => 'required',
 			'accountability_attachment' =>['nullable', function ($attribute, $value, $fail) {
@@ -326,20 +339,20 @@ class AccountabilityController extends Controller
             DB::beginTransaction();
 
             $accountability_attachment = "";
-            if($request->hasFile('accountability_attachment')){			
+            if($request->hasFile('accountability_attachment')){
                 $accountability = Accountability::find($id);
                 Storage::delete('public/accountability-attachment/'.$accountability->accountability_attachment);
-    
+
                 $extension = $request->file('accountability_attachment')->extension();
                 $accountability_attachment = date('dmyHis').'.'.$extension;
                 $path = Storage::putFileAs('public/accountability-attachment', $request->file('accountability_attachment'), $accountability_attachment);
             }
-            
+
             $accountability = Accountability::find($id);
             $accountability->description = $request->description;
             $accountability->accountability_attachment = ($accountability_attachment <> "") ? $accountability_attachment : $accountability->accountability_attachment;;
             $accountability->save();
-    
+
             $accountabilitydetail= AccountabilityDetail::where('accountability_code', $accountability->accountability_code)->delete();
 
             $datedetail = $request->input('datedetail', []);

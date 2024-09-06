@@ -26,6 +26,30 @@ Route::get('language/{language}', 'LanguageController@switch')->name('language.s
 * --------------------------------------------------------------------
 */
 Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function () {
+    //Route cache:
+    Route::get('/route-cache', function() {
+        $exitCode = Artisan::call('route:cache');
+        return '<h1>Routes cached</h1>';
+    });
+    
+    //Storage Link:
+    Route::get('/storage-link', function() {
+        $exitCode = Artisan::call('storage:link');
+        return '<h1>Storage Link Sukses</h1>';
+    });
+
+    //Up:
+    Route::get('/up-system', function() {
+        $exitCode = Artisan::call('up');
+        return '<h1>Maintenance Mode Off</h1>';
+    });
+    
+    //Down:
+    Route::get('/down', function() {
+        $exitCode = Artisan::call('down');
+        return '<h1>Maintenance Mode On</h1>';
+    });
+    
     Route::get('/', [AuthenticatedSessionController::class, 'create'])
             ->middleware('guest')
             ->name('index');
@@ -211,8 +235,25 @@ Route::group(['namespace' => 'Backend', 'prefix' => 'admin', 'as' => 'backend.',
     Route::get("$module_name/edit/{id}", ['as' => "$module_name.edit", 'uses' => "$controller_name@edit"]);
     Route::get("$module_name/show/{id}", ['as' => "$module_name.show", 'uses' => "$controller_name@show"]);
     Route::patch("$module_name/update/{id}", ['as' => "$module_name.update", 'uses' => "$controller_name@update"]);
-    Route::get("$module_name/destroy", ['as' => "$module_name.destroy", 'uses' => "$controller_name@destroy"]);
+Route::delete("$module_name/destroy/{id}", ['as' => "$module_name.destroy", 'uses' => "$controller_name@destroy"]);
 
+    /*
+     *
+     *  Notification Phone Number Routes
+     *
+     * ---------------------------------------------------------------------
+     */
+    $module_name = 'notification_phones';
+    $controller_name = 'NotificationPhoneController';
+    Route::get("$module_name", "$controller_name@index")->name("$module_name");
+    Route::get("$module_name/index_list", ['as' => "$module_name.index_list", 'uses' => "$controller_name@index_list"]);
+    Route::post("$module_name", "$controller_name@store")->name("$module_name.store");
+    Route::get("$module_name/create", ['as' => "$module_name.create", 'uses' => "$controller_name@create"]);
+    Route::get("$module_name/edit/{id}", ['as' => "$module_name.edit", 'uses' => "$controller_name@edit"]);
+    Route::get("$module_name/show/{id}", ['as' => "$module_name.show", 'uses' => "$controller_name@show"]);
+    Route::delete("$module_name/destroy/{id}", ['as' => "$module_name.destroy", 'uses' => "$controller_name@destroy"]);
+    Route::patch("$module_name/update/{id}", ['as' => "$module_name.update", 'uses' => "$controller_name@update"]);
+    
     /*
     *
     *  Notification Routes

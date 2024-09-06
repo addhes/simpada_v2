@@ -19,7 +19,7 @@ class GenerateMenus
         \Menu::make('admin_sidebar', function ($menu) {
 
             // Laporan
-            $menu->add('<i class="fa fa-book c-sidebar-nav-icon"></i> Laporan', [
+            $menu->add('<i class="fa fa-book c-sidebar-nav-icon"></i> <span>Laporan</span> ', [
                 'route' => 'backend.reports.index',
                 'class' => 'c-sidebar-nav-item',
             ])
@@ -37,7 +37,7 @@ class GenerateMenus
         \Menu::make('director_sidebar', function ($menu) {
 
             // Laporan
-            $menu->add('<i class="fa fa-book c-sidebar-nav-icon"></i> Laporan', [
+            $menu->add('<i class="fa fa-book c-sidebar-nav-icon"></i> <span>Laporan</span>', [
                 'route' => 'backend.reports.index',
                 'class' => 'c-sidebar-nav-item',
             ])
@@ -55,7 +55,7 @@ class GenerateMenus
         \Menu::make('finance_sidebar', function ($menu) {
 
             // Laporan
-            $menu->add('<i class="fa fa-book c-sidebar-nav-icon"></i> Laporan', [
+            $menu->add('<i class="fa fa-book c-sidebar-nav-icon"></i> <span>Laporan</span>', [
                 'route' => 'backend.reports.index',
                 'class' => 'c-sidebar-nav-item',
             ])

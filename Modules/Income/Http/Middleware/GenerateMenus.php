@@ -19,7 +19,7 @@ class GenerateMenus
         \Menu::make('admin_sidebar', function ($menu) {
 
             // Bank Account
-            $menu->add('<i class="fas fa-money-check-alt c-sidebar-nav-icon"></i> Pendapatan', [
+            $menu->add('<i class="fas fa-money-check-alt c-sidebar-nav-icon"></i><span>Pendapatan</span>', [
                 'route' => 'backend.incomes.index',
                 'class' => 'c-sidebar-nav-item',
             ])
@@ -36,7 +36,24 @@ class GenerateMenus
         \Menu::make('finance_sidebar', function ($menu) {
 
             // incomes
-            $menu->add('<i class="fas fa-money-check-alt c-sidebar-nav-icon"></i> Pendapatan', [
+            $menu->add('<i class="fas fa-money-check-alt c-sidebar-nav-icon"></i><span>Pendapatan</span>', [
+                'route' => 'backend.incomes.index',
+                'class' => 'c-sidebar-nav-item',
+            ])
+            ->data([
+                'order'         => 100,
+                'activematches' => ['admin/incomes*'],
+                'permission'    => ['view_incomes'],
+            ])
+            ->link->attr([
+                'class' => 'c-sidebar-nav-link',
+            ]);
+        })->sortBy('order');
+
+        \Menu::make('director_sidebar', function ($menu) {
+
+            // incomes
+            $menu->add('<i class="fas fa-money-check-alt c-sidebar-nav-icon"></i><span>Pendapatan</span>', [
                 'route' => 'backend.incomes.index',
                 'class' => 'c-sidebar-nav-item',
             ])

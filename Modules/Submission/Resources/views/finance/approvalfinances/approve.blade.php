@@ -50,7 +50,13 @@
 
                 <div class="container-fluid" style="padding: auto;">
                     <strong class="float-left">SALDO: <span class="text-success"> @currency($last_balance)
-                        </span></strong>
+                        </span></strong> <br>
+                        @if ($nores > 0)
+                        <span class="text text-danger mb-4">
+                            {{ $$module_name_singular->name }} Memiliki {{ $nores }} pertanggung jawaban yang belum di isi
+                        </span>
+                        @else
+                        @endif
                     <strong class="float-right">STATUS: <span
                             class="{!! $status['class'] !!}">{{ strtoupper($status['status'])  }}</span></strong>
                 </div>

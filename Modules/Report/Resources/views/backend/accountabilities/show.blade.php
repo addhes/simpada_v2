@@ -121,6 +121,22 @@
                 </table>
                 <hr>
 
+                <div class="form-group row col-lg-2">
+                    @if($submission->estimated_price > $total)
+                    <label class="font-weight-bold text-warning"> Anggaran Lebih</label>
+                    @elseif($submission->estimated_price < $total)
+                        <label class="font-weight-bold text-danger"> Anggaran Kurang</label>
+                    @else
+                        <label class="font-weight-bold text-success"> Anggaran Sesuai</label>
+                    @endif
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-lg-2 col-form-label" for="submission_code">Selisih:
+                        {{ abs($total - $submission->estimated_price)}} </label>
+                </div>
+                
+                <hr>
                 <div class="row">
                     <div class="col-6">
                         <div class="form-group">

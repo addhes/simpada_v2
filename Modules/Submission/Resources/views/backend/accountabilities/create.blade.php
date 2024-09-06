@@ -36,6 +36,10 @@
         <!--/.row-->
 
         <hr>
+        <h4 class="header-title mt-0 mb-1">Note:</h4>
+        <span class="text text-danger mb-4">
+            Lampiran Attachment pertanggung jawaban harus bisa dibaca. Pastikan Lampiran pertanggung-jawaban tidak buram/tidak jelas.
+        </span>
 
         <div class="row mt-4">
             <div class="col">

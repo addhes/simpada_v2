@@ -36,6 +36,14 @@
         <!--/.row-->
 
         <hr>
+        <h4 class="header-title mt-0 mb-1">Note:</h4>
+        <span class="text text-danger mb-4">
+            Pastikan Nominal di sistem Pengajuan dan di File Attachment sama. Jika ada kesalahan, itu adalah tanggung jawab pengaju/user.
+        </span><br>
+        <span class="text text-warning mb-4">
+            Anda Memiliki {{ $nores }} pertanggung jawaban yang belum di isi
+        </span>
+
 
         <div class="row mt-4">
             <div class="col">

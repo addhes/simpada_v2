@@ -58,7 +58,6 @@ class EmployeeController extends Controller
 
         $module_action = 'Dashboard';
 
-        $balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first()->last_balance;
         $mytime = Carbon::now()->subDays(2)->toDateTimeString();
 
         return view('backend.dashboard.employee');
@@ -115,8 +114,8 @@ class EmployeeController extends Controller
 
         $data = $this->list_data()
         ->whereNotIn('submissions.status', [1,3])
-        ->where('finance_app', '<>', 2)
-        ->where('director_app', '<>', 2);
+        ->whereRaw('IFNULL(finance_app, 0) <> 2')
+        ->whereRaw('IFNULL(director_app, 0) <> 2');
         
 
         return Datatables::of($data)

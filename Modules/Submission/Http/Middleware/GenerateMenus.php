@@ -20,7 +20,7 @@ class GenerateMenus
         // Employee Sidebar
         \Menu::make('employee_sidebar', function ($menu) {
             // Access Control Dropdown Submission
-            $accessControl = $menu->add('<i data-feather="file"></i> Submission<span class="menu-arrow">', [
+            $accessControl = $menu->add('<i data-feather="file"></i> <span>Submission</span><span class="menu-arrow">', [
                 'class' => 'c-sidebar-nav-dropdown',
             ])
             ->data([
@@ -37,7 +37,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Submission
-            $accessControl->add('<i data-feather="file-plus"></i> Pengajuan', [
+            $accessControl->add('<i data-feather="file-plus"></i> <span>Pengajuan</span>', [
                 'route' => 'backend.submissions.index',
                 'class' => 'nav-item',
             ])
@@ -51,7 +51,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Accountability
-            $accessControl->add('<i data-feather="file-text"></i> Pertanggung Jawaban', [
+            $accessControl->add('<i data-feather="file-text"></i> <span>Pertanggung Jawaban</span>', [
                 'route' => 'backend.accountabilities.index',
                 'class' => 'nav-item',
             ])
@@ -64,11 +64,11 @@ class GenerateMenus
                 'class' => 'c-sidebar-nav-link',
             ]);
         })->sortBy('order');
-        
+
         // Finance Sidebar
         \Menu::make('finance_sidebar', function ($menu) {
             // Access Control Dropdown Submission
-            $accessControl = $menu->add('<i data-feather="file"></i> Submission<span class="menu-arrow">', [
+            $accessControl = $menu->add('<i data-feather="file"></i> <span>Submission</span><span class="menu-arrow">', [
                 'class' => 'c-sidebar-nav-dropdown',
             ])
             ->data([
@@ -83,9 +83,9 @@ class GenerateMenus
                 'class' => 'c-sidebar-nav-dropdown-toggle',
                 'href'  => '#',
             ]);
-            
+
             // Submenu: Submission
-            $accessControl->add('<i data-feather="file-plus"></i> Pengajuan', [
+            $accessControl->add('<i data-feather="file-plus"></i> <span>Pengajuan</span>', [
                 'route' => 'backend.submissions.index',
                 'class' => 'nav-item',
             ])
@@ -99,7 +99,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Accountability
-            $accessControl->add('<i data-feather="file-text"></i> Pertanggung Jawaban', [
+            $accessControl->add('<i data-feather="file-text"></i> <span>Pertanggung Jawaban</span>', [
                 'route' => 'backend.accountabilities.index',
                 'class' => 'nav-item',
             ])
@@ -113,7 +113,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Approval Finance
-            $accessControl->add('<i data-feather="check"></i> Approval Finance', [
+            $accessControl->add('<i data-feather="check"></i> <span>Approval Finance</span>', [
                 'route' => 'backend.approvalfinances.index',
                 'class' => 'nav-item',
             ])
@@ -125,12 +125,40 @@ class GenerateMenus
             ->link->attr([
                 'class' => 'c-sidebar-nav-link',
             ]);
+
+            // Submenu: Approval Submission Urgent
+            $accessControl->add('<i data-feather="check"></i> <span>Approval Urgent</span>', [
+                'route' => 'backend.approvalurgents.index',
+                'class' => 'nav-item',
+            ])
+            ->data([
+                'order'         => 104,
+                'activematches' => 'admin/approvalurgents*',
+                'permission'    => ['view_approvalurgents'],
+            ])
+            ->link->attr([
+                'class' => 'c-sidebar-nav-link',
+            ]);
+
+            $accessControl->add('<i data-feather="check"></i> <span>Submission OPS</span>', [
+                'route' => 'backend.approvalurgents.index',
+                'class' => 'nav-item',
+            ])
+            ->data([
+                'order'         => 105,
+                'activematches' => 'admin/approvalurgents*',
+                'permission'    => ['view_approvalurgents'],
+            ])
+            ->link->attr([
+                'class' => 'c-sidebar-nav-link',
+            ]);
+
         })->sortBy('order');
 
         // Director Sidebar
         \Menu::make('director_sidebar', function ($menu) {
             // Access Control Dropdown Submission
-            $accessControl = $menu->add('<i data-feather="file"></i> Submission<span class="menu-arrow">', [
+            $accessControl = $menu->add('<i data-feather="file"></i> <span>Submission</span><span class="menu-arrow">', [
                 'class' => 'c-sidebar-nav-dropdown',
             ])
             ->data([
@@ -145,9 +173,9 @@ class GenerateMenus
                 'class' => 'c-sidebar-nav-dropdown-toggle',
                 'href'  => '#',
             ]);
-            
+
             // Submenu: Submission
-            $accessControl->add('<i data-feather="file-plus"></i> Pengajuan', [
+            $accessControl->add('<i data-feather="file-plus"></i> <span>Pengajuan</span>', [
                 'route' => 'backend.submissions.index',
                 'class' => 'nav-item',
             ])
@@ -161,7 +189,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Accountability
-            $accessControl->add('<i data-feather="file-text"></i> Pertanggung Jawaban', [
+            $accessControl->add('<i data-feather="file-text"></i> <span>Pertanggung Jawaban</span>', [
                 'route' => 'backend.accountabilities.index',
                 'class' => 'nav-item',
             ])
@@ -175,7 +203,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Approval Director
-            $accessControl->add('<i data-feather="check"></i> Approval Director', [
+            $accessControl->add('<i data-feather="check"></i> <span>Approval Director</span>', [
                 'route' => 'backend.approvaldirectors.index',
                 'class' => 'nav-item',
             ])
@@ -189,7 +217,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Approval Submission Urgent
-            $accessControl->add('<i data-feather="check"></i> Approval Urgent', [
+            $accessControl->add('<i data-feather="check"></i> <span>Approval Urgent</span>', [
                 'route' => 'backend.approvalurgents.index',
                 'class' => 'nav-item',
             ])
@@ -220,7 +248,7 @@ class GenerateMenus
         // admin sidebar
         \Menu::make('admin_sidebar', function ($menu) {
             // Access Control Dropdown Submission
-            $accessControl = $menu->add('<i data-feather="file"></i> Submission<span class="menu-arrow">', [
+            $accessControl = $menu->add('<i data-feather="file"></i> <span>Submission</span><span class="menu-arrow">', [
                 'class' => 'c-sidebar-nav-dropdown',
             ])
             ->data([
@@ -235,9 +263,9 @@ class GenerateMenus
                 'class' => 'c-sidebar-nav-dropdown-toggle',
                 'href'  => '#',
             ]);
-            
+
             // Submenu: Submission
-            $accessControl->add('<i data-feather="file-plus"></i> Pengajuan', [
+            $accessControl->add('<i data-feather="file-plus"></i> <span>Pengajuan</span>', [
                 'route' => 'backend.submissions.index',
                 'class' => 'nav-item',
             ])
@@ -251,7 +279,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Accountability
-            $accessControl->add('<i data-feather="file-text"></i> Pertanggung Jawaban', [
+            $accessControl->add('<i data-feather="file-text"></i> <span>Pertanggung Jawaban</span>', [
                 'route' => 'backend.accountabilities.index',
                 'class' => 'nav-item',
             ])
@@ -265,7 +293,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Approval Finance
-            $accessControl->add('<i data-feather="check"></i> Approval Finance', [
+            $accessControl->add('<i data-feather="check"></i> <span>Approval Finance</span>', [
                 'route' => 'backend.approvalfinances.index',
                 'class' => 'nav-item',
             ])
@@ -279,7 +307,7 @@ class GenerateMenus
             ]);
 
             // Submenu: Approval Director
-            $accessControl->add('<i data-feather="check"></i> Approval Director', [
+            $accessControl->add('<i data-feather="check"></i> <span>Approval Director</span>', [
                 'route' => 'backend.approvaldirectors.index',
                 'class' => 'nav-item',
             ])
@@ -287,6 +315,19 @@ class GenerateMenus
                 'order'         => 104,
                 'activematches' => 'admin/approvaldirectors*',
                 'permission'    => ['view_approvaldirectors'],
+            ])
+            ->link->attr([
+                'class' => 'c-sidebar-nav-link',
+            ]);
+
+            $accessControl->add('<i data-feather="check"></i> <span>Submission OPS</span>', [
+                'route' => 'backend.submission_operations.index',
+                'class' => 'nav-item',
+            ])
+            ->data([
+                'order'         => 105,
+                'activematches' => 'admin/submission_operations*',
+                'permission'    => ['view_submission_operations'],
             ])
             ->link->attr([
                 'class' => 'c-sidebar-nav-link',

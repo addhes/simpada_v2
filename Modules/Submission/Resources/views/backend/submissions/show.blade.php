@@ -40,7 +40,8 @@
         <div class="row mt-4">
             <div class="col">
                 <div class="container-fluid" style="padding: auto;">
-                    <strong>STATUS: <span class="{!! $status['class'] !!}">{{ strtoupper($status['status'])  }}</span></strong>
+                    <strong>STATUS: <span
+                            class="{!! $status['class'] !!}">{{ strtoupper($status['status'])  }}</span></strong>
                 </div>
 
                 <table class="table table-responsive  tbl-show">
@@ -80,18 +81,54 @@
                         <td>{{ $$module_name_singular->account_number }}</td>
                     </tr>
                     <tr>
+                        <td>Ket. Keuangan</td>
+                        <td>:</td>
+                        <td>{{ $$module_name_singular->finance_desc ?? '-'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Ket. Boss</td>
+                        <td>:</td>
+                        <td>{{ $$module_name_singular->director_desc ?? '-' }}</td>
+                    </tr>
+                    <tr>
                         <td>Attachment</td>
                         <td>:</td>
                         <td>
                             <div class="btn-group">
                                 @if($submission->user_attachment == '')
+                                    <p class="font-italic text-danger">Attachment tidak ada.</p>
+                                @else
+
+                                    @if (Storage::exists('public/user-attachment/'.$$module_name_singular->user_attachment))
+                                    <a href="{{ asset ('storage/user-attachment/'.$submission->user_attachment) }}"
+                                        target="_blank" class="{{ $submission->user_attachment == '' ? 'a-disabled' : '' }}"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class='uil uil-file-alt mr-1'></i>Unduh</a>
+                                    @else
+                                    <a href="{{ $submission->user_attachment }}"
+                                        target="_blank" class="{{ $submission->user_attachment == '' ? 'a-disabled' : '' }}"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class='uil uil-file-alt mr-1'></i>Unduh</a>
+                                    @endif
+                                @endif
+
+
+
+                                {{-- @if($submission->user_attachment == '' )
                                 <p class="font-italic text-danger">Attachment tidak ada.</p>
                                 @else
-                                <a href="{{ asset ('storage/user-attachment/'.$submission->user_attachment) }}"
-                                    target="_blank" class="{{ $submission->user_attachment == '' ? 'a-disabled' : '' }}"
-                                    aria-haspopup="true" aria-expanded="false">
-                                    <i class='uil uil-file-alt mr-1'></i>Unduh</a>
-                                @endif
+                                    @if (asset ('storage/user-attachment/'.$submission->user_attachment))
+                                        <a href="{{ $submission->user_attachment }}"
+                                            target="_blank" class="{{ $submission->user_attachment == '' ? 'a-disabled' : '' }}"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class='uil uil-file-alt mr-1'></i>Unduh</a>
+                                    @else
+                                        <a href="{{ asset ('storage/user-attachment/'.$submission->user_attachment) }}"
+                                        target="_blank" class="{{ $submission->user_attachment == '' ? 'a-disabled' : '' }}"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class='uil uil-file-alt mr-1'></i>Unduh</a>
+                                    @endif
+                                @endif --}}
                             </div>
                         </td>
                     </tr>
@@ -138,13 +175,44 @@
                 <hr>
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col">
                         <div class="form-group">
-                            <x-buttons.return-back title="{{__('Update')}} {{ ucwords(Str::singular($module_name)) }}">
-                            </x-buttons.return-back>
+                            <!-- <x-buttons.return-back title="{{__('Update')}} {{ ucwords(Str::singular($module_name)) }}">
+                            </x-buttons.return-back> -->
+
+                            @if($$module_name_singular->finance_app == null && $$module_name_singular->director_app ==
+                            null)
+                            @can('delete_'.$module_name)
+                            <form id="delete-user-form"
+                                action='{{route("backend.$module_name.destroy",$$module_name_singular->id)}}'
+                                method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <x-buttons.delete title="{{__('Delete')}} {{ ucwords(Str::singular($module_name)) }}">
+                                    {{__('Delete')}}
+                                </x-buttons.delete>
+                            </form>
+                            @endcan
+                            @endif
                         </div>
                     </div>
                 </div>
+
+                @if($status['status'] == 'Finish')
+                <div class="form-group row">
+                    <div class="col-lg-12">
+                        <div class="btn-group">
+                            <a href="{{ asset ('storage/finance-attachment/'.$submission->finance_attachment) }}"
+                                target="_blank" class="{{ $submission->finance_attachment == '' ? 'a-disabled' : '' }}"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class='uil uil-file-alt mr-1'></i>Download Attachment Keuangan</a>
+                        </div>
+                        @if($submission->finance_attachment == '')
+                        <p class="font-italic text-danger">Attachment belum ada.</p>
+                        @endif
+                    </div>
+                </div>
+                @endif
 
             </div>
         </div>

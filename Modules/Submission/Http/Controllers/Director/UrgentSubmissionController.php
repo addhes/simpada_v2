@@ -158,7 +158,7 @@ class UrgentSubmissionController extends Controller
         $channel = Channel::orderBy('name')->get();
         $category = Category::orderBy('name')->get();
         $total = $submissiondetail->sum('nominal');
-		$balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first();
+		$balance = BalanceTransaction::select('last_balance')->where('company_code', $$module_name_singular->company_code)->orderBy('created_at','DESC')->first();
 		$last_balance = $balance->last_balance == null ? 0 : $balance->last_balance;
 
         $status = statusChecking($$module_name_singular->submission_code);
@@ -204,6 +204,21 @@ class UrgentSubmissionController extends Controller
             $Submission->updated_at = $mytime->toDateTimeString();
             $Submission->save();
 			
+			 $phones = DB::table('notification_phones as np')
+            ->join('users as u', 'np.user_id', 'u.id')
+            ->where('np.company_code', auth()->user()->company_code)
+            ->where('np.deleted_at', null)
+            ->selectRaw('u.name, u.mobile, np.company_code, category_code, u.id');
+
+            $user = User::find($Submission->user_id);
+            $phone_number = $phones->where('category_code', 'Finance')->get();
+
+            $msg = "Pengajuan Urgent ".$request->title." dari user ".ucwords($user->name)." menunggu pengiriman dana dengan kode pengajuan ".$Submission->submission_code."\nTerimakasih \n\nLink: https://simpada.wahanagroup.com";
+
+            foreach ($phone_number as $item) {
+                $response = sendWA($item->mobile, $msg);
+            }
+            
 			DB::commit();
             Flash::success("<i class='fas fa-check'></i>'".Str::singular($module_title)."' Approved")->important();
             return redirect("admin/$module_name");
@@ -240,7 +255,7 @@ class UrgentSubmissionController extends Controller
         $channel = Channel::orderBy('name')->get();
         $category = Category::orderBy('name')->get();
         $total = $submissiondetail->sum('nominal');
-		$balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first();
+		$balance = BalanceTransaction::select('last_balance')->where('company_code', $$module_name_singular->company_code)->orderBy('created_at','DESC')->first();
 		$last_balance = $balance->last_balance == null ? 0 : $balance->last_balance;
 
         $status = statusChecking($$module_name_singular->submission_code);
@@ -269,6 +284,8 @@ class UrgentSubmissionController extends Controller
 			DB::beginTransaction();
             $Submission = Submission::find($id);
             $Submission->status = 3;
+            $Submission->director_app = 2;
+            $Submission->director_desc = "Rejected From Urgent Submission";
             $Submission->status_date = $mytime->toDateTimeString();
             $Submission->updated_at = $mytime->toDateTimeString();
             $Submission->save();
@@ -315,7 +332,7 @@ class UrgentSubmissionController extends Controller
         $channel = Channel::orderBy('name')->get();
         $category = Category::orderBy('name')->get();
         $total = $submissiondetail->sum('nominal');
-		$balance = BalanceTransaction::select('last_balance')->orderBy('created_at','DESC')->first();
+		$balance = BalanceTransaction::select('last_balance')->where('company_code', $$module_name_singular->company_code)->orderBy('created_at','DESC')->first();
 		$last_balance = $balance->last_balance == null ? 0 : $balance->last_balance;
 
         $status = statusChecking($$module_name_singular->submission_code);
